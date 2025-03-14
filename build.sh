@@ -13,4 +13,4 @@ cp /tmp/swaybg.service /usr/lib/systemd/user/
 ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.service.wants/
 
 cp /tmp/swayidle.service /usr/lib/systemd/user/
-ln -s ~/.config/systemd/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
+ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/

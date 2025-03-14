@@ -14,8 +14,10 @@ FROM ghcr.io/ublue-os/bluefin-dx:stable-daily
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
 COPY build.sh /tmp/build.sh
+COPY swaybg.service /tmp/swaybg.service
+COPY swayidle.service /tmp/swayidle.service
 
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build.sh && \
     ostree container commit
-    
+

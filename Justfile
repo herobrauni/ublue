@@ -102,18 +102,38 @@ sudoif command *args:
 #
 
 # Build the image using the specified parameters
-build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0" $base=base_image:
+build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0" $base="bluefin":
     #!/usr/bin/env bash
+    # Validate base image name
+    if [[ "$base" != "bluefin" && "$base" != "aurora" ]]; then
+        echo "Error: base must be either 'bluefin' or 'aurora'"
+        exit 1
+    fi
+    
+    # Construct full base image URL with dx suffix if enabled
+    base_name="$base"
+    if [[ "$dx" == "1" ]]; then
+        base_name="${base}-dx"
+    fi
+    base_url="ghcr.io/ublue-os/${base_name}:stable-daily"
 
     # Get Version
     ver="${tag}-${centos_version}.$(date +%Y%m%d)"
 
-    # Determine image variant suffix based on base image
+    # Determine image variant suffix based on base image and dx setting
     variant=""
-    if [[ "${base}" == *"bluefin-dx"* ]]; then
-        variant="-bluefin-niri"
-    elif [[ "${base}" == *"aurora-dx"* ]]; then
-        variant="-aurora-niri"
+    if [[ "$base" == "bluefin" ]]; then
+        variant="-bluefin"
+        if [[ "$dx" == "1" ]]; then
+            variant="${variant}-dx"
+        fi
+        variant="${variant}-niri"
+    elif [[ "$base" == "aurora" ]]; then
+        variant="-aurora"
+        if [[ "$dx" == "1" ]]; then
+            variant="${variant}-dx"
+        fi
+        variant="${variant}-niri"
     fi
 
     BUILD_ARGS=()
@@ -123,7 +143,7 @@ build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0" $base=
     BUILD_ARGS+=("--build-arg" "ENABLE_DX=${dx}")
     BUILD_ARGS+=("--build-arg" "ENABLE_HWE=${hwe}")
     BUILD_ARGS+=("--build-arg" "ENABLE_GDX=${gdx}")
-    BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${base}")
+    BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${base_url}")
 
     # Append variant to target image name
     target_image="${target_image}${variant}"

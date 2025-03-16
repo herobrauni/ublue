@@ -3,7 +3,11 @@
 set -ouex pipefail
 
 dnf5 -y copr enable yalter/niri-git
+dnf5 -y copr enable ulysg/xwayland-satellite
+
 dnf5 -y install niri mako waybar swaybg swayidle
+
+dnf5 -y install xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring polkit-kde xwayland-satellite
 
 mkdir -p /etc/skel/.config/systemd/user/niri.service.wants
 ln -s /usr/lib/systemd/user/mako.service /etc/skel/.config/systemd/user/niri.service.wants/

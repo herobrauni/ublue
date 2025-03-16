@@ -1,10 +1,11 @@
-FROM ghcr.io/ublue-os/bluefin-dx:stable-daily
+ARG BASE_IMAGE=ghcr.io/ublue-os/bluefin-dx:stable-daily
+FROM ${BASE_IMAGE}
 
-## Other possible base images include:
-# FROM ghcr.io/ublue-os/bazzite:latest
-# FROM ghcr.io/ublue-os/bluefin-nvidia:stable
+# List of supported base images:
+# - ghcr.io/ublue-os/bluefin-dx:stable-daily
+# - ghcr.io/ublue-os/aurora-dx:stable-daily
 # 
-# ... and so on, here are more base images
+# Additional base images can be found at:
 # Universal Blue Images: https://github.com/orgs/ublue-os/packages
 # Fedora base image: quay.io/fedora/fedora-bootc:41
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
@@ -20,4 +21,3 @@ COPY swayidle.service /tmp/swayidle.service
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build.sh && \
     ostree container commit
-

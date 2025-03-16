@@ -4,6 +4,7 @@ export centos_version := env("CENTOS_VERSION", "stream10")
 export fedora_version := env("CENTOS_VERSION", "41")
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
+export base_image := env("BASE_IMAGE", "ghcr.io/ublue-os/bluefin-dx:stable-daily")
 
 alias build-vm := build-qcow2
 alias rebuild-vm := rebuild-qcow2
@@ -101,11 +102,19 @@ sudoif command *args:
 #
 
 # Build the image using the specified parameters
-build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0":
+build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0" $base=base_image:
     #!/usr/bin/env bash
 
     # Get Version
     ver="${tag}-${centos_version}.$(date +%Y%m%d)"
+
+    # Determine image variant suffix based on base image
+    variant=""
+    if [[ "${base}" == *"bluefin-dx"* ]]; then
+        variant="-bluefin-niri"
+    elif [[ "${base}" == *"aurora-dx"* ]]; then
+        variant="-aurora-niri"
+    fi
 
     BUILD_ARGS=()
     BUILD_ARGS+=("--build-arg" "MAJOR_VERSION=${centos_version}")
@@ -114,6 +123,10 @@ build $target_image=image_name $tag=default_tag $dx="0" $hwe="0" $gdx="0":
     BUILD_ARGS+=("--build-arg" "ENABLE_DX=${dx}")
     BUILD_ARGS+=("--build-arg" "ENABLE_HWE=${hwe}")
     BUILD_ARGS+=("--build-arg" "ENABLE_GDX=${gdx}")
+    BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${base}")
+
+    # Append variant to target image name
+    target_image="${target_image}${variant}"
     if [[ -z "$(git status -s)" ]]; then
         BUILD_ARGS+=("--build-arg" "SHA_HEAD_SHORT=$(git rev-parse --short HEAD)")
     fi

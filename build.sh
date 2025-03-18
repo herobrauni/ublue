@@ -4,6 +4,9 @@ set -ouex pipefail
 
 dnf5 -y copr enable yalter/niri-git
 dnf5 -y copr enable ulysg/xwayland-satellite
+dnf5 -y copr enable ryanabx/cosmic-epoch
+
+dnf5 -y install cosmic-desktop
 
 dnf5 -y install niri mako waybar swaybg swayidle
 
@@ -18,3 +21,5 @@ ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.s
 
 cp /tmp/swayidle.service /usr/lib/systemd/user/
 ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
+
+systemctl enable cosmic-greeter

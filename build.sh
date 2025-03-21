@@ -8,6 +8,8 @@ dnf5 -y copr enable ryanabx/cosmic-epoch
 
 dnf5 -y install cosmic-desktop
 
+dnf5 -y install tailscale
+
 dnf5 -y install niri mako waybar swaybg swayidle
 
 dnf5 -y install xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring polkit-kde xwayland-satellite

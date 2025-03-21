@@ -5,10 +5,11 @@ set -ouex pipefail
 dnf5 -y copr enable yalter/niri-git
 dnf5 -y copr enable ulysg/xwayland-satellite
 dnf5 -y copr enable ryanabx/cosmic-epoch
+dnf5 -y copr enable che/nerd-fonts
 
 dnf5 -y install cosmic-desktop
 
-dnf5 -y install tailscale
+dnf5 -y install tailscale nerd-fonts
 
 dnf5 -y install niri mako waybar swaybg swayidle
 

@@ -29,4 +29,5 @@ ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service
 
 rpm-ostree install \
     code \
-    tailscale
+    tailscale \
+    alacritty

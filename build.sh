@@ -27,7 +27,8 @@ ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service
 
 # systemctl enable cosmic-greeter
 
-rpm-ostree install \
+dnf5 -y install \
     code \
     tailscale \
-    alacritty
+    alacritty \
+    fish

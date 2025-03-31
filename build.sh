@@ -26,3 +26,7 @@ cp /tmp/swayidle.service /usr/lib/systemd/user/
 ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
 
 # systemctl enable cosmic-greeter
+
+rpm-ostree install \
+    code \
+    tailscale

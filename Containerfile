@@ -14,7 +14,18 @@ FROM ${BASE_IMAGE}
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
+# Copy repos and script first
+COPY repos/ /tmp/repos/
+COPY add_repos.sh /tmp/add_repos.sh
+
+# Set up repositories
+RUN chmod +x /tmp/add_repos.sh && \
+    cd /tmp && \
+    ./add_repos.sh && \
+    rm -rf /tmp/repos /tmp/add_repos.sh
+
 COPY build.sh /tmp/build.sh
+RUN chmod +x /tmp/build.sh
 
 COPY swaybg.service /tmp/swaybg.service
 COPY swayidle.service /tmp/swayidle.service
@@ -24,6 +35,7 @@ RUN mkdir -p /var/lib/alternatives && \
     ostree container commit
 
 COPY brew-install.sh /tmp/brew-install.sh
-RUN mkdir -p /var/lib/alternatives && \
+RUN chmod +x /tmp/brew-install.sh && \
+    mkdir -p /var/lib/alternatives && \
     /tmp/brew-install.sh && \
     ostree container commit

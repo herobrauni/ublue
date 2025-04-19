@@ -31,3 +31,5 @@ dnf5 -y install \
     code \
     tailscale \
     alacritty
+
+dnf5 -y remove fish

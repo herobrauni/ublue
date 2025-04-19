@@ -30,6 +30,7 @@ ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service
 dnf5 -y install \
     code \
     tailscale \
-    alacritty
+    alacritty \
+    gcc
 
 dnf5 -y remove fish

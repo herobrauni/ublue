@@ -31,6 +31,9 @@ dnf5 -y install \
     code \
     tailscale \
     alacritty \
-    gcc
+    gcc \
+    procps-ng curl file git
+
+dnf5 install @'Development Tools'
 
 dnf5 -y remove fish

@@ -34,6 +34,6 @@ dnf5 -y install \
     gcc \
     procps-ng curl file git
 
-dnf5 -y install @'Development Tools'
+dnf5 -y group install development-tools
 
 dnf5 -y remove fish

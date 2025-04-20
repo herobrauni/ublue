@@ -29,20 +29,34 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        base_image:
-          - ghcr.io/ublue-os/bluefin:stable-daily
-          - ghcr.io/ublue-os/bluefin-dx:stable-daily
-          - ghcr.io/ublue-os/bluefin-nvidia-open:stable-daily
-          - ghcr.io/ublue-os/bluefin-dx-nvidia-open:stable-daily
-          - ghcr.io/ublue-os/aurora:stable-daily
-          - ghcr.io/ublue-os/aurora-dx:stable-daily
-          - ghcr.io/ublue-os/aurora-nvidia-open:stable-daily
-          - ghcr.io/ublue-os/aurora-dx-nvidia-open:stable-daily
-          - ghcr.io/ublue-os/sericea-main:latest
-          - ghcr.io/ublue-os/sericea-nvidia:latest
-          - ghcr.io/ublue-os/sway-atomic-main:latest
-          - ghcr.io/ublue-os/sway-atomic-nvidia:latest
-          - ghcr.io/ublue-os/cosmic-atomic-main:latest
+        # base_image:
+        #   - ghcr.io/ublue-os/bluefin:stable-daily
+        #   - ghcr.io/ublue-os/bluefin-dx:stable-daily
+        #   - ghcr.io/ublue-os/bluefin-nvidia-open:stable-daily
+        #   - ghcr.io/ublue-os/bluefin-dx-nvidia-open:stable-daily
+        #   - ghcr.io/ublue-os/aurora:stable-daily
+        #   - ghcr.io/ublue-os/aurora-dx:stable-daily
+        #   - ghcr.io/ublue-os/aurora-nvidia-open:stable-daily
+        #   - ghcr.io/ublue-os/aurora-dx-nvidia-open:stable-daily
+        #   - ghcr.io/ublue-os/sericea-main:latest
+        #   - ghcr.io/ublue-os/sericea-nvidia:latest
+        #   - ghcr.io/ublue-os/sway-atomic-main:latest
+        #   - ghcr.io/ublue-os/sway-atomic-nvidia:latest
+        #   - ghcr.io/ublue-os/cosmic-atomic-main:latest
+        base_image_name:
+          - bluefin
+          - bluefin-dx
+          - bluefin-nvidia-open
+          - bluefin-dx-nvidia-open
+          - aurora
+          - aurora-dx
+          - aurora-nvidia-open
+          - aurora-dx-nvidia-open
+          - sericea-main
+          - sericea-nvidia
+          - sway-atomic-main
+          - sway-atomic-nvidia
+          - cosmic-atomic-main
 
     permissions:
       contents: read
@@ -109,9 +123,10 @@ jobs:
           containerfiles: |
             ./Containerfile
           build-args: |
-            BASE_IMAGE=${{ matrix.base_image }}
+            BASE_IMAGE=ghcr.io/ublue-os/${{ matrix.base_image_name }}:latest
           # Add base image variant to the image name
-          image: ${{ env.IMAGE_NAME }}-${{ contains(matrix.base_image, 'bluefin') && (contains(matrix.base_image, '-dx') && 'bluefin-dx' || 'bluefin') || contains(matrix.base_image, 'sericea') && (contains(matrix.base_image, '-nvidia') && 'sericea-nvidia' || 'sericea') || (contains(matrix.base_image, '-dx') && 'aurora-dx' || 'aurora') }}${{ contains(matrix.base_image, 'nvidia-open') && '-nvidia-open' || '' }}-niri
+          # image: ${{ env.IMAGE_NAME }}-${{ contains(matrix.base_image, 'bluefin') && (contains(matrix.base_image, '-dx') && 'bluefin-dx' || 'bluefin') || contains(matrix.base_image, 'sericea') && (contains(matrix.base_image, '-nvidia') && 'sericea-nvidia' || 'sericea') || (contains(matrix.base_image, '-dx') && 'aurora-dx' || 'aurora') }}${{ contains(matrix.base_image, 'nvidia-open') && '-nvidia-open' || '' }}-niri
+          image: ${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           oci: false
@@ -173,7 +188,7 @@ jobs:
           REGISTRY_PASSWORD: ${{ github.token }}
         with:
           registry: ${{ steps.registry_case.outputs.lowercase }}
-          image: ${{ steps.image_case.outputs.lowercase }}-${{ contains(matrix.base_image, 'bluefin') && (contains(matrix.base_image, '-dx') && 'bluefin-dx' || 'bluefin') || contains(matrix.base_image, 'sericea') && (contains(matrix.base_image, '-nvidia') && 'sericea-nvidia' || 'sericea') || (contains(matrix.base_image, '-dx') && 'aurora-dx' || 'aurora') }}${{ contains(matrix.base_image, 'nvidia-open') && '-nvidia-open' || '' }}-niri
+          image: ${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri
           tags: ${{ steps.metadata.outputs.tags }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
@@ -189,7 +204,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
-          IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}-${{ contains(matrix.base_image, 'bluefin') && (contains(matrix.base_image, '-dx') && 'bluefin-dx' || 'bluefin') || contains(matrix.base_image, 'sericea') && (contains(matrix.base_image, '-nvidia') && 'sericea-nvidia' || 'sericea') || (contains(matrix.base_image, '-dx') && 'aurora-dx' || 'aurora') }}${{ contains(matrix.base_image, 'nvidia-open') && '-nvidia-open' || '' }}-niri"
+          IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}-${{ matrix.base_image_name }}-niri"
           for tag in ${{ steps.metadata.outputs.tags }}; do
             cosign sign -y --key env://COSIGN_PRIVATE_KEY $IMAGE_FULL:$tag
           done

@@ -40,6 +40,9 @@ jobs:
           - ghcr.io/ublue-os/aurora-dx-nvidia-open:stable-daily
           - ghcr.io/ublue-os/sericea-main:latest
           - ghcr.io/ublue-os/sericea-nvidia:latest
+          - ghcr.io/ublue-os/sway-atomic-main:latest
+          - ghcr.io/ublue-os/sway-atomic-nvidia:latest
+          - ghcr.io/ublue-os/cosmic-atomic-main:latest
 
     permissions:
       contents: read

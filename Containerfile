@@ -39,6 +39,7 @@ RUN chmod +x /tmp/brew-install.sh && \
     mkdir -p /var/lib/alternatives && \
     /tmp/brew-install.sh && \
     rm /.dockerenv && \
+    touch /.autolabel && \
     ostree container commit
 
 # RUN rm /.dockerenv && \

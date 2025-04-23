@@ -37,3 +37,5 @@ dnf5 -y install \
 dnf5 -y group install development-tools
 
 dnf5 -y remove fish
+
+rm /.dockerenv

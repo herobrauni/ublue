@@ -40,4 +40,5 @@ RUN chmod +x /tmp/brew-install.sh && \
     /tmp/brew-install.sh && \
     ostree container commit
 
-RUN rm /.dockerenv
+RUN rm /.dockerenv && \
+    ostree container commit

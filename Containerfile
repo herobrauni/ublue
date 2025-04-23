@@ -39,3 +39,5 @@ RUN chmod +x /tmp/brew-install.sh && \
     mkdir -p /var/lib/alternatives && \
     /tmp/brew-install.sh && \
     ostree container commit
+
+RUN rm /.dockerenv

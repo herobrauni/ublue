@@ -44,18 +44,18 @@ jobs:
         #   - ghcr.io/ublue-os/sway-atomic-nvidia:latest
         #   - ghcr.io/ublue-os/cosmic-atomic-main:latest
         base_image_name:
-          - bluefin
-          - bluefin-dx
-          - bluefin-nvidia-open
-          - bluefin-dx-nvidia-open
-          - aurora
-          - aurora-dx
-          - aurora-nvidia-open
+          # - bluefin
+          # - bluefin-dx
+          # - bluefin-nvidia-open
+          # - bluefin-dx-nvidia-open
+          # - aurora
+          # - aurora-dx
+          # - aurora-nvidia-open
           - aurora-dx-nvidia-open
-          - sericea-main
-          - sericea-nvidia
-          - sway-atomic-main
-          - sway-atomic-nvidia
+          # - sericea-main
+          # - sericea-nvidia
+          # - sway-atomic-main
+          # - sway-atomic-nvidia
           - cosmic-atomic-main
 
     permissions:

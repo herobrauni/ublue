@@ -54,7 +54,7 @@ jobs:
           - aurora-dx-nvidia-open
           # - sericea-main
           # - sericea-nvidia
-          # - sway-atomic-main
+          - sway-atomic-main
           # - sway-atomic-nvidia
           - cosmic-atomic-main
 

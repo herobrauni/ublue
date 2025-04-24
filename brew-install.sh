@@ -18,3 +18,5 @@ chmod +x /tmp/brew-install
 tar --zstd -cvf /usr/share/homebrew.tar.zst /home/linuxbrew/.linuxbrew
 
 echo "::endgroup::"
+
+rm /.dockerenv

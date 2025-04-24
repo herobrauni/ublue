@@ -4,7 +4,7 @@ set -ouex pipefail
 
 dnf5 -y copr enable yalter/niri-git
 dnf5 -y copr enable ulysg/xwayland-satellite
-dnf5 -y copr enable ryanabx/cosmic-epoch
+# dnf5 -y copr enable ryanabx/cosmic-epoch
 dnf5 -y copr enable che/nerd-fonts
 
 dnf5 -y install cosmic-desktop
@@ -25,8 +25,8 @@ ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.s
 cp /tmp/swayidle.service /usr/lib/systemd/user/
 ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
 
-systemctl disable sddm
-systemctl enable cosmic-greeter
+# systemctl disable sddm
+# systemctl enable cosmic-greeter
 
 dnf5 -y install \
     code \

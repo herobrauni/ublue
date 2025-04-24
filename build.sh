@@ -25,6 +25,7 @@ ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.s
 cp /tmp/swayidle.service /usr/lib/systemd/user/
 ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
 
+systemctl disable sddm
 systemctl enable cosmic-greeter
 
 dnf5 -y install \

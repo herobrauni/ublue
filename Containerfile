@@ -42,3 +42,4 @@ RUN chmod +x /tmp/brew-install.sh && \
 
 # RUN rm /.dockerenv && \
 #    ostree container commit
+RUN bootc container lint

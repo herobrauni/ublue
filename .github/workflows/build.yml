@@ -114,7 +114,7 @@ jobs:
       - name: Check Pre Rechunk
         run: |
           podman image ls
-          podman image tag ${{ steps.build_image.outputs.image }}:${{ env.DEFAULT_TAG }} raw-img
+          podman image tag ${{ steps.build_image.outputs.image }}:${{ env.DATETAG }} raw-img
           podman image ls
 
       - name: Rechunk Image

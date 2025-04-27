@@ -14,7 +14,6 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: "${{ github.event.repository.name }}" # the name of the image produced by this build, matches repo names
   IMAGE_DESC: "My Customized Universal Blue Image"
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}" # do not edit
   ARTIFACTHUB_LOGO_URL: "https://avatars.githubusercontent.com/u/120078124?s=200&v=4" # You should put your own image here so that you get a fancy profile image on https://artifacthub.io/!
@@ -28,35 +27,13 @@ jobs:
   build_push:
     name: Build and push image
     runs-on: ubuntu-24.04
+    env:
+      IMAGE_NAME: ${{ github.event.repository.name }}-${{ matrix.base_image_name }}-niri
     strategy:
       matrix:
-        # base_image:
-        #   - ghcr.io/ublue-os/bluefin:stable-daily
-        #   - ghcr.io/ublue-os/bluefin-dx:stable-daily
-        #   - ghcr.io/ublue-os/bluefin-nvidia-open:stable-daily
-        #   - ghcr.io/ublue-os/bluefin-dx-nvidia-open:stable-daily
-        #   - ghcr.io/ublue-os/aurora:stable-daily
-        #   - ghcr.io/ublue-os/aurora-dx:stable-daily
-        #   - ghcr.io/ublue-os/aurora-nvidia-open:stable-daily
-        #   - ghcr.io/ublue-os/aurora-dx-nvidia-open:stable-daily
-        #   - ghcr.io/ublue-os/sericea-main:latest
-        #   - ghcr.io/ublue-os/sericea-nvidia:latest
-        #   - ghcr.io/ublue-os/sway-atomic-main:latest
-        #   - ghcr.io/ublue-os/sway-atomic-nvidia:latest
-        #   - ghcr.io/ublue-os/cosmic-atomic-main:latest
         base_image_name:
-          # - bluefin
-          # - bluefin-dx
-          # - bluefin-nvidia-open
-          # - bluefin-dx-nvidia-open
-          # - aurora
-          # - aurora-dx
-          # - aurora-nvidia-open
           - aurora-dx-nvidia-open
-          # - sericea-main
-          # - sericea-nvidia
           - sway-atomic-main
-          # - sway-atomic-nvidia
           - cosmic-atomic-main
 
     permissions:
@@ -119,15 +96,13 @@ jobs:
 
       - name: Build Image
         id: build_image
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           containerfiles: |
             ./Containerfile
           build-args: |
             BASE_IMAGE=ghcr.io/ublue-os/${{ matrix.base_image_name }}:latest
-          # Add base image variant to the image name
-          # image: ${{ env.IMAGE_NAME }}-${{ contains(matrix.base_image, 'bluefin') && (contains(matrix.base_image, '-dx') && 'bluefin-dx' || 'bluefin') || contains(matrix.base_image, 'sericea') && (contains(matrix.base_image, '-nvidia') && 'sericea-nvidia' || 'sericea') || (contains(matrix.base_image, '-dx') && 'aurora-dx' || 'aurora') }}${{ contains(matrix.base_image, 'nvidia-open') && '-nvidia-open' || '' }}-niri
-          image: ${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri
+          image: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           oci: false
@@ -141,19 +116,19 @@ jobs:
       #   uses: hhd-dev/rechunk@f153348d8100c1f504dec435460a0d7baf11a9d2 # v1.1.1
       #   with:
       #     rechunk: 'ghcr.io/hhd-dev/rechunk:v1.0.1'
-      #     ref: "localhost/${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri:${{ env.DEFAULT_TAG }}"
-      #     prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri:${{ env.DEFAULT_TAG }}"
+      #     ref: "localhost/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
+      #     prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
       #     skip_compression: true
       #     version: ${{ env.CENTOS_VERSION }}
       #     labels: ${{ steps.metadata.outputs.labels }} # Rechunk strips out all the labels during build, this needs to be reapplied here with newline separator
 
-      # # This is necessary so that the podman socket can find the rechunked image on its storage
+      # This is necessary so that the podman socket can find the rechunked image on its storage
       # - name: Load in podman and tag
       #   run: |
       #     IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
       #     sudo rm -rf ${{ steps.rechunk.outputs.output }}
       #     for tag in ${{ steps.metadata.outputs.tags }}; do
-      #       podman tag $IMAGE ${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri:$tag
+      #       podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
       #     done
 
       # These `if` statements are so that pull requests for your custom images do not make it publish any packages under your name without you knowing
@@ -170,13 +145,13 @@ jobs:
       # https://github.com/macbre/push-to-ghcr/issues/12
       - name: Lowercase Registry
         id: registry_case
-        uses: ASzc/change-string-case-action@v6
+        uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
         with:
           string: ${{ env.IMAGE_REGISTRY }}
 
       - name: Lowercase Image
         id: image_case
-        uses: ASzc/change-string-case-action@v6
+        uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
         with:
           string: ${{ env.IMAGE_NAME }}
 
@@ -189,7 +164,7 @@ jobs:
           REGISTRY_PASSWORD: ${{ github.token }}
         with:
           registry: ${{ steps.registry_case.outputs.lowercase }}
-          image: ${{ env.IMAGE_NAME }}-${{ matrix.base_image_name }}-niri
+          image: ${{ steps.image_case.outputs.lowercase }}
           tags: ${{ steps.metadata.outputs.tags }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
@@ -199,13 +174,13 @@ jobs:
       # using Cosign and save the private key as a repository secret in Github for this workflow
       # to consume. For more details, review the image signing section of the README.
       - name: Install Cosign
-        uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
+        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
 
       - name: Sign container image
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
-          IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}-${{ matrix.base_image_name }}-niri"
+          IMAGE_FULL="${{ steps.registry_case.outputs.lowercase }}/${{ steps.image_case.outputs.lowercase }}"
           for tag in ${{ steps.metadata.outputs.tags }}; do
             cosign sign -y --key env://COSIGN_PRIVATE_KEY $IMAGE_FULL:$tag
           done

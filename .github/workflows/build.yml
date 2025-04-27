@@ -111,56 +111,57 @@ jobs:
           oci: false
 
 
-      - name: Check Pre Rechunk
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
+
+      - name: podman ls
+        shell: bash
         run: |
           podman image ls
-          podman image tag ${{ steps.build_image.outputs.image }}:${{ env.DATETAG }} raw-img
-          podman image ls
+          sudo podman image ls
 
       - name: Rechunk Image
         id: rechunk
         uses: hhd-dev/rechunk@v1.2.1
         with:
           rechunk: ghcr.io/hhd-dev/rechunk:v1.2.1
-          ref: raw-img
-          skip_compression: 'true'
+          ref: "raw-img"
+          skip_compression: "true"
+          labels: ${{ steps.metadata.outputs.labels }}
+          prev-ref: ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}:${{ env.DEFAULT_TAG }}
 
-      # Overwrite the image with the chuncked image
-      - name: Switch Rechunked Image Name
+      # Load Rechunked image and Tag them
+      - name: Load Rechunked Image
+        shell: bash
         run: |
+          set -eoux pipefail
           IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
           sudo rm -rf ${{ steps.rechunk.outputs.output }}
+
           for tag in ${{ steps.build_image.outputs.tags }}; do
             podman tag $IMAGE ${{ env.IMAGE_NAME }}:${tag}
           done
 
-      - name: Check Pre Rechunk
-        run:
-          podman image ls
+          # HWE Tagging
+          if [[ "${{ matrix.image_flavor }}" =~ hwe ]]; then
 
-      # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
-      # This does not make your image faster to download, just provides better resumability and fixes a few errors.
-      # Documentation for Rechunk is provided on their github repository at https://github.com/hhd-dev/rechunk
-      # You can enable it by uncommenting the following lines:
-      # - name: Run Rechunker
-      #   id: rechunk
-      #   uses: hhd-dev/rechunk
-      #   with:
-      #     rechunk: 'ghcr.io/hhd-dev/rechunk:v1.2.1'
-      #     ref: "localhost/${{ env.IMAGE_NAME }}:${{ env.DATETAG}}"
-      #     prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DATETAG}}"
-      #     skip_compression: true
-      #     version: ${{ env.CENTOS_VERSION }}
-      #     labels: ${{ steps.metadata.outputs.labels }} # Rechunk strips out all the labels during build, this needs to be reapplied here with newline separator
+            image_name="${{ env.IMAGE_NAME }}"
+            asus_name="${image_name/hwe/asus}"
+            surface_name="${image_name/hwe/surface}"
 
-      # # This is necessary so that the podman socket can find the rechunked image on its storage
-      # - name: Load in podman and tag
-      #   run: |
-      #     IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
-      #     sudo rm -rf ${{ steps.rechunk.outputs.output }}
-      #     for tag in ${{ steps.metadata.outputs.tags }}; do
-      #       podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
-      #     done
+            for tag in ${{ steps.build_image.outputs.tags }}; do
+              podman tag  "${IMAGE}" "${asus_name}":${tag}
+              podman tag  "${IMAGE}" "${surface_name}":${tag}
+            done
+          fi
+          podman tag $IMAGE rechunked-img
+          podman images
+
 
       # These `if` statements are so that pull requests for your custom images do not make it publish any packages under your name without you knowing
       # They also check if the runner is on the default branch so that things like the merge queue (if you enable it), are going to work
@@ -171,14 +172,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
-      # https://github.com/macbre/push-to-ghcr/issues/12
-      - name: Lowercase Registry
-        id: registry_case
-        uses: ASzc/change-string-case-action@d0603cd0a7dd490be678164909f65c7737470a7f # v6
-        with:
-          string: ${{ env.IMAGE_REGISTRY }}
 
       - name: Lowercase Image
         id: image_case

@@ -30,15 +30,15 @@ RUN chmod +x /tmp/build.sh
 COPY swaybg.service /tmp/swaybg.service
 COPY swayidle.service /tmp/swayidle.service
 
-# RUN mkdir -p /var/lib/alternatives && \
-#     /tmp/build.sh && \
-#     ostree container commit
+RUN mkdir -p /var/lib/alternatives && \
+    /tmp/build.sh && \
+    ostree container commit
 
-# COPY brew-install.sh /tmp/brew-install.sh
-# RUN chmod +x /tmp/brew-install.sh && \
-#     mkdir -p /var/lib/alternatives && \
-#     /tmp/brew-install.sh && \
-#     ostree container commit
+COPY brew-install.sh /tmp/brew-install.sh
+RUN chmod +x /tmp/brew-install.sh && \
+    mkdir -p /var/lib/alternatives && \
+    /tmp/brew-install.sh && \
+    ostree container commit
 
 # RUN rm /.dockerenv && \
 #    ostree container commit

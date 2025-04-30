@@ -27,6 +27,9 @@ RUN chmod +x /tmp/add_repos.sh && \
 COPY build.sh /tmp/build.sh
 RUN chmod +x /tmp/build.sh
 
+RUN mkdir -p /nix
+RUN mkdir -p /var/nix
+
 COPY swaybg.service /tmp/swaybg.service
 COPY swayidle.service /tmp/swayidle.service
 

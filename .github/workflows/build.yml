@@ -33,6 +33,7 @@ jobs:
       matrix:
         base_image_name:
           - aurora-dx-nvidia-open
+          - aurora-dx
           - sway-atomic-main
           - cosmic-atomic-main
 

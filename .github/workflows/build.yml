@@ -36,6 +36,7 @@ jobs:
           - aurora-dx
           - sway-atomic-main
           - cosmic-atomic-main
+          - kinoite-main
 
     permissions:
       contents: read

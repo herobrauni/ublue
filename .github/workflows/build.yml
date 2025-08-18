@@ -37,6 +37,7 @@ jobs:
           - sway-atomic-main
           - cosmic-atomic-main
           - kinoite-main
+          - budgie-atomic-main
 
     permissions:
       contents: read

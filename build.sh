@@ -13,7 +13,7 @@ dnf5 -y install tailscale nerd-fonts
 
 dnf5 -y install niri mako waybar swaybg swayidle
 
-dnf5 -y install @xfce-desktop-environment
+# dnf5 -y install @xfce-desktop-environment
 
 dnf5 -y install xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring polkit-kde xwayland-satellite xwaylandvideobridge
 

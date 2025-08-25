@@ -86,7 +86,7 @@ jobs:
           context: ./src-repo
           platforms: linux/amd64 #,linux/arm64
         #   load: true
-          tags: herobrauni/csi-rclone:latest
+          tags: ghcr.io/herobrauni/csi-rclone:latest
           push: true
 
 

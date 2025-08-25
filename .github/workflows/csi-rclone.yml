@@ -34,7 +34,7 @@ jobs:
           git clone https://github.com/SwissDataScienceCenter/csi-rclone.git src-repo
           cd src-repo
           echo "Cloned repository contents:"
-          ls -la src-repo/
+          ls -la
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v4

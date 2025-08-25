@@ -53,13 +53,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./src-repo
-          platforms: linux/amd64 #,linux/arm64
-          load: true
-          tags: herobrauni/csi-rclone:latest
+
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
       # https://github.com/macbre/push-to-ghcr/issues/12
@@ -85,19 +79,30 @@ jobs:
         with:
           string: ${{ env.IMAGE_NAME }}
 
-      - name: Push To GHCR
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
-        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        id: push
-        env:
-          REGISTRY_USER: ${{ github.actor }}
-          REGISTRY_PASSWORD: ${{ github.token }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
-          registry: ${{ steps.registry_case.outputs.lowercase }}
-          image: ${{ steps.image_case.outputs.lowercase }}
+          context: ./src-repo
+          platforms: linux/amd64#,linux/arm64
+          load: true
           tags: herobrauni/csi-rclone:latest
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ env.REGISTRY_PASSWORD }}
+          push: true
+
+
+    #   - name: Push To GHCR
+    #     uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
+    #     if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    #     id: push
+    #     env:
+    #       REGISTRY_USER: ${{ github.actor }}
+    #       REGISTRY_PASSWORD: ${{ github.token }}
+    #     with:
+    #       registry: ${{ steps.registry_case.outputs.lowercase }}
+    #       image: ${{ steps.image_case.outputs.lowercase }}
+    #       tags: herobrauni/csi-rclone:latest
+    #       username: ${{ env.REGISTRY_USER }}
+    #       password: ${{ env.REGISTRY_PASSWORD }}
 
       # This section is optional and only needs to be enabled if you plan on distributing
       # your project for others to consume. You will need to create a public and private key

@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./src-repo
-          platforms: linux/amd64#,linux/arm64
+          platforms: linux/amd64 #,linux/arm64
           load: true
           tags: herobrauni/csi-rclone:latest
           push: true

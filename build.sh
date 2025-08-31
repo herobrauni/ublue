@@ -3,6 +3,7 @@
 set -ouex pipefail
 
 dnf5 -y copr enable yalter/niri-git
+echo "priority=1" | tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:yalter:niri-git.repo
 dnf5 -y copr enable ulysg/xwayland-satellite
 # dnf5 -y copr enable ryanabx/cosmic-epoch
 dnf5 -y copr enable che/nerd-fonts

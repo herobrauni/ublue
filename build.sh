@@ -8,6 +8,8 @@ dnf5 -y copr enable ulysg/xwayland-satellite
 # dnf5 -y copr enable ryanabx/cosmic-epoch
 dnf5 -y copr enable che/nerd-fonts
 
+dnf5 -y install docker-compose --skip-broken
+
 # dnf5 -y install cosmic-desktop
 
 dnf5 -y install tailscale nerd-fonts
@@ -36,7 +38,6 @@ dnf5 -y install \
     tailscale \
     alacritty \
     gcc \
-    docker-compose \
     procps-ng curl file git
 
 dnf5 -y group install development-tools

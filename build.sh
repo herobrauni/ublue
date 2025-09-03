@@ -36,6 +36,7 @@ dnf5 -y install \
     tailscale \
     alacritty \
     gcc \
+    docker-compose \
     procps-ng curl file git
 
 dnf5 -y group install development-tools

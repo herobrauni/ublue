@@ -59,12 +59,13 @@ curl -L "https://github.com/rsms/inter/raw/refs/tags/v4.1/docs/font-files/InterV
 curl -L "https://github.com/tonsky/FiraCode/releases/latest/download/FiraCode-Regular.ttf" -o /usr/share/fonts/FiraCode-Regular.ttf
 
 mkdir -p /etc/skel/.config/quickshell && git clone https://github.com/AvengeMedia/DankMaterialShell.git /etc/skel/.config/quickshell/dms
-sh -c "curl -L https://github.com/AvengeMedia/danklinux/releases/latest/download/dms-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /var/usrlocal/bin/dms > /dev/null && chmod +x /var/usrlocal/bin/dms"
+curl -L https://github.com/AvengeMedia/danklinux/releases/latest/download/dms-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /var/usrlocal/bin/dms > /dev/null && chmod +x /var/usrlocal/bin/dms
+ls /var/usrlocal/bin
 
 dnf5 -y install cava wl-clipboard brightnessctl
-dnf5 -y copr enable wef/cliphist && sudo dnf5 -y install cliphist
-dnf5 -y copr enable heus-sueh/packages && sudo dnf5 -y install matugen
+dnf5 -y copr enable wef/cliphist && dnf5 -y install cliphist
+dnf5 -y copr enable heus-sueh/packages && dnf5 -y install matugen
 
-sh -c "curl -L https://github.com/AvengeMedia/dgop/releases/latest/download/dgop-linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /var/usrlocal/bin/dgop > /dev/null && chmod +x /var/usrlocal/bin/dgop"
+curl -L https://github.com/AvengeMedia/dgop/releases/latest/download/dgop-linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /var/usrlocal/bin/dgop > /dev/null && chmod +x /var/usrlocal/bin/dgop
 
 

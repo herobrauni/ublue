@@ -14,21 +14,21 @@ dnf5 -y install docker-compose --skip-broken
 
 dnf5 -y install tailscale nerd-fonts
 
-dnf5 -y install niri mako waybar swaybg swayidle
+dnf5 -y install niri # mako waybar swaybg swayidle
 
 # dnf5 -y install @xfce-desktop-environment
 
-dnf5 -y install xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring polkit-kde xwayland-satellite xwaylandvideobridge
+# dnf5 -y install xdg-desktop-portal-gtk xdg-desktop-portal-gnome gnome-keyring polkit-kde xwayland-satellite xwaylandvideobridge
 
-mkdir -p /etc/skel/.config/systemd/user/niri.service.wants
-ln -s /usr/lib/systemd/user/mako.service /etc/skel/.config/systemd/user/niri.service.wants/
-ln -s /usr/lib/systemd/user/waybar.service /etc/skel/.config/systemd/user/niri.service.wants/
+# mkdir -p /etc/skel/.config/systemd/user/niri.service.wants
+# ln -s /usr/lib/systemd/user/mako.service /etc/skel/.config/systemd/user/niri.service.wants/
+# ln -s /usr/lib/systemd/user/waybar.service /etc/skel/.config/systemd/user/niri.service.wants/
 
-cp /tmp/swaybg.service /usr/lib/systemd/user/
-ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.service.wants/
+# cp /tmp/swaybg.service /usr/lib/systemd/user/
+# ln -s /usr/lib/systemd/user/swaybg.service /etc/skel/.config/systemd/user/niri.service.wants/
 
-cp /tmp/swayidle.service /usr/lib/systemd/user/
-ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
+# cp /tmp/swayidle.service /usr/lib/systemd/user/
+# ln -s /usr/lib/user/swayidle.service /etc/skel/.config/systemd/user/niri.service.wants/
 
 # systemctl disable sddm
 # systemctl enable cosmic-greeter
@@ -43,3 +43,9 @@ dnf5 -y install \
 dnf5 -y group install development-tools
 
 dnf5 -y remove fish
+
+git clone https://github.com/Drakulix/cosmic-ext-extra-sessions.git
+cd cosmic-ext-extra-sessions
+git submodule update --init
+just build
+sudo just install-niri

@@ -46,5 +46,5 @@ dnf5 -y group install development-tools
 dnf5 -y remove fish
 
 curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/refs/heads/main/niri/cosmic-ext-niri.desktop -o /usr/share/wayland-sessions/cosmic-ext-niri.desktop
-curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/refs/heads/main/niri/start-cosmic-ext-niri -o /var/usrlocal/bin/start-cosmic-ext-niri
+curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/refs/heads/main/niri/start-cosmic-ext-niri -o /usr/local/bin/start-cosmic-ext-niri
 # chmod +x /var/usrlocal/bin/start-cosmic-ext-niri

@@ -44,8 +44,6 @@ dnf5 -y group install development-tools
 
 dnf5 -y remove fish
 
-git clone https://github.com/Drakulix/cosmic-ext-extra-sessions.git
-cd cosmic-ext-extra-sessions
-git submodule update --init
-just build
-sudo just install-niri
+curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/refs/heads/main/niri/cosmic-ext-niri.desktop -o /usr/share/wayland-sessions/cosmic-ext-niri.desktop
+curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/refs/heads/main/niri/start-cosmic-ext-niri -o /usr/local/bin/start-cosmic-ext-niri
+chmod +x /usr/local/bin/start-cosmic-ext-niri

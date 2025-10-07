@@ -4,7 +4,7 @@ set -ouex pipefail
 
 dnf5 -y copr enable yalter/niri-git
 echo "priority=1" | tee -a /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:yalter:niri-git.repo
-dnf5 -y copr enable ulysg/xwayland-satellite
+dnf5 -y copr enable ulysg/xwayland-satellite && dnf5 -y install xwayland-satellite
 # dnf5 -y copr enable ryanabx/cosmic-epoch
 dnf5 -y copr enable che/nerd-fonts
 
@@ -52,20 +52,19 @@ curl -L https://raw.githubusercontent.com/Drakulix/cosmic-ext-extra-sessions/ref
 chmod +x /var/usrlocal/bin/start-cosmic-ext-niri
 
 ### DMS FOR NIRI
-dnf5 copr enable errornointernet/quickshell
-dnf5 install quickshell-git
+dnf5 -y copr enable errornointernet/quickshell
+dnf5 -y install quickshell-git
 curl -L "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o /usr/share/fonts/MaterialSymbolsRounded.ttf
 curl -L "https://github.com/rsms/inter/raw/refs/tags/v4.1/docs/font-files/InterVariable.ttf" -o /usr/share/fonts/InterVariable.ttf
 curl -L "https://github.com/tonsky/FiraCode/releases/latest/download/FiraCode-Regular.ttf" -o /usr/share/fonts/FiraCode-Regular.ttf
 
-mkdir /etc/skel/.config/quickshell && git clone https://github.com/AvengeMedia/DankMaterialShell.git /etc/skel/.config/quickshell/dms
+mkdir -p /etc/skel/.config/quickshell && git clone https://github.com/AvengeMedia/DankMaterialShell.git /etc/skel/.config/quickshell/dms
 sh -c "curl -L https://github.com/AvengeMedia/danklinux/releases/latest/download/dms-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /usr/local/bin/dms > /dev/null && chmod +x /usr/local/bin/dms"
 
-dnf5 install cava wl-clipboard brightnessctl
-dnf5 copr enable wef/cliphist && sudo dnf install cliphist
-dnf5 copr enable heus-sueh/packages && sudo dnf install matugen
+dnf5 -y install cava wl-clipboard brightnessctl
+dnf5 -y copr enable wef/cliphist && sudo dnf5 -y install cliphist
+dnf5 -y copr enable heus-sueh/packages && sudo dnf5 -y install matugen
 
 sh -c "curl -L https://github.com/AvengeMedia/dgop/releases/latest/download/dgop-linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').gz | gunzip | tee /usr/local/bin/dgop > /dev/null && chmod +x /usr/local/bin/dgop"
-
 
 

@@ -34,9 +34,9 @@ jobs:
         base_image_name:
           - sway-atomic-main
           - cosmic-atomic-main
-          - kinoite-main
-          - bazzite-dx
-          - bazzite-dx-nvidia
+          # - kinoite-main
+          # - bazzite-dx
+          # - bazzite-dx-nvidia
 
     permissions:
       contents: read
